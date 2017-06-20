@@ -1,6 +1,6 @@
 module Main exposing (..)
 
-import TimeControl
+import TimeControl exposing (Msg(..))
 import UnexploredReality
 import Home
 import Routes exposing (..)
@@ -8,7 +8,8 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html
 import Navigation
-
+import DatePicker exposing (DatePicker)
+import Date exposing (Day(..))
 
 main : Program Never Model Msg
 main =
@@ -36,19 +37,27 @@ type Msg
     | UrlChange Navigation.Location
 
 
-initialModel : Model
-initialModel =
+initialModel : DatePicker -> Model
+initialModel picker =
     { route = Home
     , homeModel = Home.init
-    , timeControlModel = TimeControl.init
+    , timeControlModel = TimeControl.init picker
     , unexploredRealityModel = UnexploredReality.init
     }
 
 
 init : Navigation.Location -> ( Model, Cmd Msg )
 init loc =
-    update (UrlChange loc) initialModel
-
+    let
+        ( datePicker, datePickerCmd ) =
+            DatePicker.init
+        ( updatedModel, cmd ) =
+            update (UrlChange loc) (initialModel datePicker)
+    in
+        updatedModel !
+            [ cmd
+            , Cmd.map TimeControlMsg <| Cmd.map SetDatePicker datePickerCmd
+            ]
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
