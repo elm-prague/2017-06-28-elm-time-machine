@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import TimeControl exposing (Msg(..))
-import UnexploredReality
+import UnexploredReality exposing (Realities)
 import Home
 import Routes exposing (..)
 import Html exposing (..)
@@ -11,14 +11,18 @@ import Navigation
 import DatePicker exposing (DatePicker)
 import Date exposing (Day(..))
 
-main : Program Never Model Msg
+main : Program Flags Model Msg
 main =
-    Navigation.program UrlChange
+    Navigation.programWithFlags UrlChange
         { init = init
         , view = view
         , update = update
         , subscriptions = \_ -> Sub.none
         }
+
+type alias Flags =
+  { realities: Realities
+  }
 
 
 type alias Model =
@@ -37,22 +41,22 @@ type Msg
     | UrlChange Navigation.Location
 
 
-initialModel : DatePicker -> Model
-initialModel picker =
+initialModel : Flags -> DatePicker -> Model
+initialModel flags picker =
     { route = Home
     , homeModel = Home.init
     , timeControlModel = TimeControl.init picker
-    , unexploredRealityModel = UnexploredReality.init
+    , unexploredRealityModel = UnexploredReality.init flags.realities
     }
 
 
-init : Navigation.Location -> ( Model, Cmd Msg )
-init loc =
+init : Flags -> Navigation.Location -> ( Model, Cmd Msg )
+init flags loc =
     let
         ( datePicker, datePickerCmd ) =
             DatePicker.init
         ( updatedModel, cmd ) =
-            update (UrlChange loc) (initialModel datePicker)
+            update (UrlChange loc) (initialModel flags datePicker)
     in
         updatedModel !
             [ cmd
@@ -101,11 +105,18 @@ urlUpdate loc model =
 
         {-Just (TimeControlPage as route) ->
             { model | route = route }
-                ! [ Cmd.map TimeControlMsg <| TimeControl.someInitialCmd ]
+                ! [ Cmd.map TimeControlMsg <| TimeControl.someInitialCmd ]-}
 
         Just ((UnexploredRealityPage realityId) as route) ->
-            { model | route = route }
-                ! [ Cmd.map UnexploredRealityMsg <| UnexploredReality.someInitialCmd ]-}
+            let
+                realityModel =
+                    UnexploredReality.setReality realityId model.unexploredRealityModel
+            in
+            { model
+            | route = route
+            , unexploredRealityModel = realityModel
+            }
+                ! [ ]
 
         Just route ->
             { model | route = route } ! []

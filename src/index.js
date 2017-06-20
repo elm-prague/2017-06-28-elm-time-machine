@@ -6,4 +6,16 @@ require('./assets/css/main.css');
 
 var Elm = require('./Main');
 
-var elm = Elm.Main.fullscreen();
+var realities = {
+    red: {
+        description: "red reality"
+    },
+    green: {
+        description: "green reality"
+    },
+    blue: {
+        description: "blue reality"
+    }
+};
+
+var elm = Elm.Main.fullscreen({realities: realities});
