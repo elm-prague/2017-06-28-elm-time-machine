@@ -18,4 +18,4 @@ var realities = {
     }
 };
 
-var elm = Elm.Main.fullscreen({realities: realities});
+var elm = Elm.Main.fullscreen({realities: realities, time: Date.now()});

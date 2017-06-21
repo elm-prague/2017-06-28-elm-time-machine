@@ -1,4 +1,4 @@
-module TimeControl exposing (Model, init, Msg(..), update, view)
+module TimeControl exposing (Model, init, Msg(..), update, view, subscriptions)
 
 import Html exposing (Html, div, text, h1, p, input, label, select, fieldset, br)
 import Html.Attributes exposing (value, type_, checked, class)
@@ -6,6 +6,10 @@ import Html.Events exposing (onClick)
 import Routes exposing (linkTo, Route(UnexploredRealityPage))
 import DatePicker exposing (DatePicker, defaultSettings, DateEvent(..))
 import Date exposing (Date)
+import Time exposing (Time)
+import NotificationHelper exposing (subscriptions, updateNotificationTime)
+import Toast exposing (Toast)
+import Types exposing (..)
 
 --- MODEL ---
 
@@ -13,32 +17,35 @@ type alias Model =
     { datePicker: DatePicker.DatePicker
     , pickedDate: Maybe Date
     , color: Color
+    , time: Time
+    , toast : Toast AppNotification
     }
 
 
 type Msg =
-    DefaultMsg
-    | SetDatePicker DatePicker.Msg
+    SetDatePicker DatePicker.Msg
     | SelectColor Color
+    | Tick Time
 
 type Color =
     Red
     | Blue
     | Green
 
-init : DatePicker -> Model
-init picker =
-    Model picker Nothing Red
+init : DatePicker -> Time -> Model
+init picker time =
+    Model picker Nothing Red time NotificationHelper.initToast
 
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    NotificationHelper.subscriptions model Tick
 
 --- UPDATE ---
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-            DefaultMsg ->
-                model ! []
-
             SetDatePicker msg ->
                 let
                     ( newDatePicker, datePickerCmd, dateEvent ) =
@@ -52,16 +59,20 @@ update msg model =
                             Changed newDate ->
                                 newDate
                 in
-                    { model
+                    ({ model
                         | pickedDate = date
                         , datePicker = newDatePicker
-                    }
+                    } |> NotificationHelper.postNotification (AppNotification "Time machine has started (powered by plutonium stolen from Libyan terrorists)" False) )
                         ! [ Cmd.map SetDatePicker datePickerCmd ]
 
             SelectColor color ->
                 { model
                 | color = color
                 } ! []
+            Tick newTime ->
+                ( NotificationHelper.updateNotificationTime model newTime
+                , Cmd.none
+                )
 
 --- VIEW ---
 
@@ -69,6 +80,7 @@ view : Model -> Html Msg
 view model =
     div []
             [ h1 [] [ text "Time control page" ]
+            , NotificationHelper.notificationsView model.toast model.time
             , text "Choose the time where do you want to go. Please be patient 'cause I'm limited by datePicker capabilities."
             , p [] []
             , DatePicker.view

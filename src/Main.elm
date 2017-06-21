@@ -10,6 +10,7 @@ import Html
 import Navigation
 import DatePicker exposing (DatePicker)
 import Date exposing (Day(..))
+import Time exposing (Time)
 
 main : Program Flags Model Msg
 main =
@@ -17,11 +18,12 @@ main =
         { init = init
         , view = view
         , update = update
-        , subscriptions = \_ -> Sub.none
+        , subscriptions = subscriptions
         }
 
 type alias Flags =
   { realities: Realities
+  , time : Time
   }
 
 
@@ -45,7 +47,7 @@ initialModel : Flags -> DatePicker -> Model
 initialModel flags picker =
     { route = Home
     , homeModel = Home.init
-    , timeControlModel = TimeControl.init picker
+    , timeControlModel = TimeControl.init picker flags.time
     , unexploredRealityModel = UnexploredReality.init flags.realities
     }
 
@@ -62,6 +64,12 @@ init flags loc =
             [ cmd
             , Cmd.map TimeControlMsg <| Cmd.map SetDatePicker datePickerCmd
             ]
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.batch
+        [ Sub.map TimeControlMsg (TimeControl.subscriptions model.timeControlModel)
+        ]
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =

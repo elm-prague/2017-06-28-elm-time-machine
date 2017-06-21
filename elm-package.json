@@ -5,7 +5,8 @@
     "license": "MIT",
     "source-directories": [
         ".",
-        "src/"
+        "src/",
+        "src/notification/"
     ],
     "exposed-modules": [],
     "dependencies": {

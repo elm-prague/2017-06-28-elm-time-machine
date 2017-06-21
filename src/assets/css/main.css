@@ -105,3 +105,35 @@
     color: #EEE; }
 .elm-datepicker--other-month.elm-datepicker--picked {
     color: white; }
+
+.notifications-list {
+    list-style-type: none;
+    margin-left: 0;
+    padding-left: 0;
+}
+
+.notification {
+    position: relative;
+    overflow: hidden;
+    height: 40px;
+
+    background-color: #5cb85c;
+    color: white;
+
+    transition: height 0.75s ease, opacity 1s ease;
+    margin-top: 1px;
+}
+
+.notification--important {
+    font-weight: bold;
+    background-color: #d9534f;
+}
+
+.notification--hidden {
+    opacity: 0;
+    height: 0;
+}
+
+.notification__content {
+    padding: 10px;
+}
