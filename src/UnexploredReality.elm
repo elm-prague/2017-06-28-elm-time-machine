@@ -1,8 +1,9 @@
-module UnexploredReality exposing (Model, init, Msg, update, view, Realities, setReality)
+module UnexploredReality exposing (Model, init, Msg, update, view, setReality)
 
 import Html
 import Html exposing (Html, div, text, p, h1)
 import Routes exposing (linkTo, Route(Home))
+import Types exposing (..)
 
 --- MODEL ---
 
@@ -11,15 +12,6 @@ type alias Model =
     , reality: Maybe Reality
     }
 
-type alias Realities =
-    { red: Reality
-    , green: Reality
-    , blue: Reality
-    }
-
-type alias Reality =
-    { description: String
-    }
 
 type Msg =
     DefaultMsg

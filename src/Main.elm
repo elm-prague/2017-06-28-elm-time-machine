@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import TimeControl exposing (Msg(..))
-import UnexploredReality exposing (Realities)
+import Types exposing (..)
 import Home
 import Routes exposing (..)
 import Html exposing (..)
@@ -11,6 +11,7 @@ import Navigation
 import DatePicker exposing (DatePicker)
 import Date exposing (Day(..))
 import Time exposing (Time)
+import UnexploredReality exposing (Model)
 
 main : Program Flags Model Msg
 main =

@@ -13,3 +13,14 @@ type alias NotificationExt a =
     | toast : Toast AppNotification
     , time : Time
     }
+
+
+type alias Realities =
+    { red: Reality
+    , green: Reality
+    , blue: Reality
+    }
+
+type alias Reality =
+    { description: String
+    }
