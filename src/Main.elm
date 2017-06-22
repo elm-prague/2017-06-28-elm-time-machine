@@ -11,7 +11,8 @@ import Navigation
 import DatePicker exposing (DatePicker)
 import Date exposing (Day(..))
 import Time exposing (Time)
-import UnexploredReality exposing (Model)
+import UnexploredReality exposing (Msg(..), Model, viewDialog, viewDialogHeader, viewDialogFooter)
+import Dialog exposing (Config)
 
 main : Program Flags Model Msg
 main =
@@ -141,6 +142,17 @@ view model =
         [ menu model
         , div [ class "content" ]
             [ contentView model ]
+        ,  Dialog.view <|
+              if model.unexploredRealityModel.showDialog then
+                  Just
+                      { closeMessage = Just (UnexploredRealityMsg CloseDialog)
+                      , containerClass = Nothing
+                      , header = Just (Html.map UnexploredRealityMsg <| UnexploredReality.viewDialogHeader model.unexploredRealityModel)
+                      , body = Just (Html.map UnexploredRealityMsg <| UnexploredReality.viewDialog model.unexploredRealityModel)
+                      , footer = Just (Html.map UnexploredRealityMsg <| UnexploredReality.viewDialogFooter model.unexploredRealityModel)
+                      }
+                else
+                  Nothing
         ]
 
 

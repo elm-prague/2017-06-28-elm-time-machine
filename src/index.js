@@ -8,13 +8,22 @@ var Elm = require('./Main');
 
 var realities = {
     red: {
-        description: "red reality"
+        description: "red reality",
+        actionA: "action A",
+        actionB: "action B",
+        result: "result"
     },
     green: {
-        description: "green reality"
+        description: "green reality",
+        actionA: "action A",
+        actionB: "action B",
+        result: "result"
     },
     blue: {
-        description: "blue reality"
+        description: "blue reality",
+        actionA: "action A",
+        actionB: "action B",
+        result: "result"
     }
 };
 

@@ -23,4 +23,7 @@ type alias Realities =
 
 type alias Reality =
     { description: String
+    , actionA: String
+    , actionB: String
+    , result: String
     }
