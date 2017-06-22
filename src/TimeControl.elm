@@ -59,11 +59,18 @@ update msg model =
                             Changed newDate ->
                                 newDate
                 in
-                    ({ model
-                        | pickedDate = date
-                        , datePicker = newDatePicker
-                    } |> NotificationHelper.postNotification (AppNotification "Time machine has started (powered by plutonium stolen from Libyan terrorists)" False) )
-                        ! [ Cmd.map SetDatePicker datePickerCmd ]
+                    case dateEvent of
+                        NoChange ->
+                            { model
+                            | pickedDate = date
+                            , datePicker = newDatePicker
+                            } ! [ Cmd.map SetDatePicker datePickerCmd ]
+                        Changed c ->
+                            ({ model
+                            | pickedDate = date
+                            , datePicker = newDatePicker
+                            } |> NotificationHelper.postNotification (AppNotification "Time machine has started (powered by plutonium stolen from Libyan terrorists)" False))
+                                ! [ Cmd.map SetDatePicker datePickerCmd ]
 
             SelectColor color ->
                 { model
