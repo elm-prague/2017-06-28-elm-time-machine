@@ -1,0 +1,205 @@
+var _user$project$Main$printWayToKill = function (animal) {
+	return animal.wayToKill;
+};
+var _user$project$Main$printAnimalWebData = function (animal) {
+	var _p0 = animal;
+	switch (_p0.ctor) {
+		case 'NotAsked':
+			return _elm_lang$html$Html$text('There is no animal');
+		case 'Loading':
+			return _elm_lang$html$Html$text('Animal is loading');
+		case 'Failure':
+			return _elm_lang$html$Html$text(
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'Error loading animal: ',
+					_elm_lang$core$Basics$toString(_p0._0)));
+		default:
+			return _elm_lang$html$Html$text(
+				_user$project$Main$printWayToKill(_p0._0));
+	}
+};
+var _user$project$Main$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$none;
+};
+var _user$project$Main$init = {
+	ctor: '_Tuple2',
+	_0: {tRex: _krisajenkins$remotedata$RemoteData$NotAsked, bunny: _krisajenkins$remotedata$RemoteData$NotAsked},
+	_1: _elm_lang$core$Platform_Cmd$none
+};
+var _user$project$Main$Dinosaur = F3(
+	function (a, b, c) {
+		return {name: a, armLength: b, wayToKill: c};
+	});
+var _user$project$Main$tRexDecoder = A3(
+	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+	'wayToKill',
+	_elm_lang$core$Json_Decode$string,
+	A3(
+		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+		'armLength',
+		_elm_lang$core$Json_Decode$int,
+		A3(
+			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+			'name',
+			_elm_lang$core$Json_Decode$string,
+			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_user$project$Main$Dinosaur))));
+var _user$project$Main$KillerBunny = F2(
+	function (a, b) {
+		return {teethCount: a, wayToKill: b};
+	});
+var _user$project$Main$bunnyDecoder = A3(
+	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+	'wayToKill',
+	_elm_lang$core$Json_Decode$string,
+	A3(
+		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+		'teethCount',
+		_elm_lang$core$Json_Decode$int,
+		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_user$project$Main$KillerBunny)));
+var _user$project$Main$Model = F2(
+	function (a, b) {
+		return {tRex: a, bunny: b};
+	});
+var _user$project$Main$BunnyLoaded = function (a) {
+	return {ctor: 'BunnyLoaded', _0: a};
+};
+var _user$project$Main$getBunny = A2(
+	_elm_lang$core$Platform_Cmd$map,
+	_user$project$Main$BunnyLoaded,
+	_krisajenkins$remotedata$RemoteData$sendRequest(
+		A2(_elm_lang$http$Http$get, 'http://localhost:8200/bunny', _user$project$Main$bunnyDecoder)));
+var _user$project$Main$TRexLoaded = function (a) {
+	return {ctor: 'TRexLoaded', _0: a};
+};
+var _user$project$Main$getTRex = A2(
+	_elm_lang$core$Platform_Cmd$map,
+	_user$project$Main$TRexLoaded,
+	_krisajenkins$remotedata$RemoteData$sendRequest(
+		A2(_elm_lang$http$Http$get, 'http://localhost:8200/dinosaur', _user$project$Main$tRexDecoder)));
+var _user$project$Main$update = F2(
+	function (msg, model) {
+		var _p1 = msg;
+		switch (_p1.ctor) {
+			case 'LoadTRex':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{tRex: _krisajenkins$remotedata$RemoteData$Loading}),
+					{
+						ctor: '::',
+						_0: _user$project$Main$getTRex,
+						_1: {ctor: '[]'}
+					});
+			case 'LoadBunny':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{bunny: _krisajenkins$remotedata$RemoteData$Loading}),
+					{
+						ctor: '::',
+						_0: _user$project$Main$getBunny,
+						_1: {ctor: '[]'}
+					});
+			case 'TRexLoaded':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{tRex: _p1._0}),
+					{ctor: '[]'});
+			default:
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{bunny: _p1._0}),
+					{ctor: '[]'});
+		}
+	});
+var _user$project$Main$LoadBunny = {ctor: 'LoadBunny'};
+var _user$project$Main$LoadTRex = {ctor: 'LoadTRex'};
+var _user$project$Main$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$p,
+				{ctor: '[]'},
+				{ctor: '[]'}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$button,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$LoadTRex),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Load T-REX'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$p,
+						{ctor: '[]'},
+						{ctor: '[]'}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$button,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$LoadBunny),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('Load bunny'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$p,
+								{ctor: '[]'},
+								{ctor: '[]'}),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('T-REX: '),
+								_1: {
+									ctor: '::',
+									_0: _user$project$Main$printAnimalWebData(model.tRex),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$p,
+											{ctor: '[]'},
+											{ctor: '[]'}),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html$text('Bunny: '),
+											_1: {
+												ctor: '::',
+												_0: _user$project$Main$printAnimalWebData(model.bunny),
+												_1: {ctor: '[]'}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		});
+};
+var _user$project$Main$main = _elm_lang$html$Html$program(
+	{init: _user$project$Main$init, view: _user$project$Main$view, update: _user$project$Main$update, subscriptions: _user$project$Main$subscriptions})();
