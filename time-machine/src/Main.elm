@@ -41,7 +41,6 @@ type Msg
     = HomeMsg Home.Msg
     | TimeControlMsg TimeControl.Msg
     | UnexploredRealityMsg UnexploredReality.Msg
-    | Navigate String
     | UrlChange Navigation.Location
 
 
@@ -103,30 +102,12 @@ update msg model =
         UrlChange loc ->
             urlUpdate loc model
 
-        Navigate url ->
-            model ! [ Navigation.newUrl url ]
-
 
 urlUpdate : Navigation.Location -> Model -> ( Model, Cmd Msg )
 urlUpdate loc model =
     case (Routes.decode loc) of
         Nothing ->
             model ! [ Navigation.modifyUrl (Routes.encode model.route) ]
-
-        {-Just (TimeControlPage as route) ->
-            { model | route = route }
-                ! [ Cmd.map TimeControlMsg <| TimeControl.someInitialCmd ]-}
-
-        Just ((UnexploredRealityPage realityId) as route) ->
-            let
-                realityModel =
-                    UnexploredReality.setReality realityId model.unexploredRealityModel
-            in
-            { model
-            | route = route
-            , unexploredRealityModel = realityModel
-            }
-                ! [ ]
 
         Just route ->
             { model | route = route } ! []
@@ -137,7 +118,6 @@ view : Model -> Html Msg
 view model =
     div
         [ class "container-fluid"
-        , Routes.catchNavigationClicks Navigate
         ]
         [ menu model
         , div [ class "content" ]
