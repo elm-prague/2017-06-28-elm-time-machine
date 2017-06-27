@@ -13,6 +13,7 @@ type alias Model =
     , reality: Maybe Reality
     , showDialog: Bool
     , performedAction: String
+    , date : String
     }
 
 
@@ -23,7 +24,7 @@ type Msg =
 
 init : Realities -> Model
 init realities =
-    Model realities Nothing False ""
+    Model realities Nothing False "" ""
 
 --- UPDATE ---
 
@@ -45,19 +46,22 @@ update msg model =
                 } ! []
 
 
-setReality : String -> Model -> Model
-setReality name model =
+setReality : String -> String -> Model -> Model
+setReality name date model =
     if name == "Red" then
         { model
         | reality = Just model.realities.red
+        , date = date
         }
     else if name == "Green" then
         { model
         | reality = Just model.realities.green
+        , date = date
         }
     else
         { model
         | reality = Just model.realities.blue
+        , date = date
         }
 
 --- VIEW ---
@@ -80,6 +84,7 @@ view model =
     in
     div []
         [ h1 [] [ text "Time control page" ]
+        , text ("You moved in time to: " ++ model.date)
         , p [] []
         , text realityText
         , p [] []

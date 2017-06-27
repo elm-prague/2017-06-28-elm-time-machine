@@ -117,10 +117,10 @@ urlUpdate loc model =
             { model | route = route }
                 ! [ Cmd.map TimeControlMsg <| TimeControl.someInitialCmd ]-}
 
-        Just ((UnexploredRealityPage realityId) as route) ->
+        Just ((UnexploredRealityPage realityId date) as route) ->
             let
                 realityModel =
-                    UnexploredReality.setReality realityId model.unexploredRealityModel
+                    UnexploredReality.setReality realityId date model.unexploredRealityModel
             in
             { model
             | route = route
@@ -185,5 +185,5 @@ contentView model =
         TimeControlPage ->
             Html.map TimeControlMsg <| TimeControl.view model.timeControlModel
 
-        UnexploredRealityPage i ->
+        UnexploredRealityPage i j ->
             Html.map UnexploredRealityMsg <| UnexploredReality.view model.unexploredRealityModel

@@ -11,7 +11,7 @@ import Json.Decode as Json
 type Route
     = Home
     | TimeControlPage
-    | UnexploredRealityPage String
+    | UnexploredRealityPage String String
 
 
 routeParser : Parser (Route -> a) a
@@ -19,7 +19,7 @@ routeParser =
     UrlParser.oneOf
         [ UrlParser.map Home (s "")
         , UrlParser.map TimeControlPage (s "time-control")
-        , UrlParser.map UnexploredRealityPage (s "unexplored-reality" </> string)
+        , UrlParser.map UnexploredRealityPage (s "unexplored-reality" </> string </> string )
         ]
 
 
@@ -41,8 +41,8 @@ encode route =
         TimeControlPage ->
             "/time-control"
 
-        UnexploredRealityPage i ->
-            "/unexplored-reality/" ++ i
+        UnexploredRealityPage i j ->
+            "/unexplored-reality/" ++ i ++ "/" ++ j
 
 
 navigate : Route -> Cmd msg

@@ -5,7 +5,7 @@ import Html.Attributes exposing (value, type_, checked, class)
 import Html.Events exposing (onClick)
 import Routes exposing (linkTo, Route(UnexploredRealityPage))
 import DatePicker exposing (DatePicker, defaultSettings, DateEvent(..))
-import Date exposing (Date)
+import Date exposing (Date, year, month, day)
 import Time exposing (Time)
 import NotificationHelper exposing (subscriptions, updateNotificationTime)
 import Toast exposing (Toast)
@@ -100,7 +100,7 @@ view model =
             , p [] []
             , viewOptions model
             , p [] []
-            , Routes.linkTo (Routes.UnexploredRealityPage <| printColor model.color)
+            , Routes.linkTo (Routes.UnexploredRealityPage (printColor model.color) (printDate model.pickedDate))
                 [] [ text "No fear" ]
             ]
 
@@ -137,3 +137,19 @@ printColor color =
             "Green"
         Blue ->
             "Blue"
+
+printDate : Maybe Date -> String
+printDate date =
+    case date of
+        Nothing ->
+            "01-01-1200"
+        Just date ->
+            let
+                yearStr =
+                    toString (year date)
+                monthStr =
+                    toString (month date)
+                dayStr =
+                    toString (day date)
+            in
+                dayStr ++ "-" ++ monthStr ++ "-" ++ yearStr
