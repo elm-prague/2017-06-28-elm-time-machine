@@ -41,7 +41,6 @@ type Msg
     = HomeMsg Home.Msg
     | TimeControlMsg TimeControl.Msg
     | UnexploredRealityMsg UnexploredReality.Msg
-    | Navigate String
     | UrlChange Navigation.Location
 
 
@@ -103,9 +102,6 @@ update msg model =
         UrlChange loc ->
             urlUpdate loc model
 
-        Navigate url ->
-            model ! [ Navigation.newUrl url ]
-
 
 urlUpdate : Navigation.Location -> Model -> ( Model, Cmd Msg )
 urlUpdate loc model =
@@ -137,7 +133,6 @@ view : Model -> Html Msg
 view model =
     div
         [ class "container-fluid"
-        , Routes.catchNavigationClicks Navigate
         ]
         [ menu model
         , div [ class "content" ]
