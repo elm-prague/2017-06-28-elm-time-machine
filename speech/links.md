@@ -2,7 +2,7 @@
 
 [Dialog](http://package.elm-lang.org/packages/krisajenkins/elm-dialog/latest)
 
-[Remote data]()
+[Remote data](http://package.elm-lang.org/packages/krisajenkins/remotedata/latest)
 
 [How elm slays an UI antipattern](http://blog.jenkster.com/2016/06/how-elm-slays-a-ui-antipattern.html)
 
