@@ -17,18 +17,15 @@ main =
 
 init : ( Model, Cmd Msg )
 init =
-    ({tRex = NotAsked, bunny = NotAsked}, Cmd.none)
+    ({
+
+    }, Cmd.none)
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.none
 
 -- MODEL
-
-type alias DangerousAnimal a =
-    { a
-    | wayToKill : String
-    }
 
 type alias Dinosaur =
     { name : String
@@ -42,49 +39,19 @@ type alias KillerBunny =
     }
 
 type alias Model =
-    { tRex : WebData Dinosaur
-    , bunny : WebData KillerBunny
+    {
     }
 
 -- UPDATE
 
 type Msg = LoadTRex
-         | LoadBunny
-         | TRexLoaded (WebData Dinosaur)
-         | BunnyLoaded (WebData KillerBunny)
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
   case msg of
     LoadTRex ->
-      { model
-      | tRex = Loading
-      } ! [getTRex]
-
-    LoadBunny ->
-      { model
-        | bunny = Loading
-        } ! [getBunny]
-
-    TRexLoaded val ->
-      { model
-      | tRex = val
-      } ! []
-
-    BunnyLoaded val ->
-      { model
-      | bunny = val
-      } ! []
-
-
-
-
-
-getTRex : Cmd Msg
-getTRex =
-    get "http://localhost:8200/dinosaur" tRexDecoder
-        |> RemoteData.sendRequest
-        |> Cmd.map TRexLoaded
+       model
+      ! []
 
 tRexDecoder : JsonD.Decoder Dinosaur
 tRexDecoder =
@@ -92,13 +59,6 @@ tRexDecoder =
         |> required "name" JsonD.string
         |> required "armLength" JsonD.int
         |> required "wayToKill" JsonD.string
-
-
-getBunny : Cmd Msg
-getBunny =
-    get "http://localhost:8200/bunny" bunnyDecoder
-        |> RemoteData.sendRequest
-        |> Cmd.map BunnyLoaded
 
 bunnyDecoder : JsonD.Decoder KillerBunny
 bunnyDecoder =
@@ -114,30 +74,11 @@ view model =
     [ p [] []
     , button [onClick LoadTRex] [ text "Load T-REX"]
     , p [] []
-    , button [onClick LoadBunny] [ text "Load bunny"]
-    , p [] []
-    , text "T-REX: "
-    , printAnimalWebData model.tRex
-    , p [] []
-    , text "Bunny: "
-    , printAnimalWebData model.bunny
+--    , button [onClick LoadBunny] [ text "Load bunny"]
+--    , p [] []
+--    , text "T-REX: "
+--    , printAnimalWebData model.tRex
+--    , p [] []
+--    , text "Bunny: "
+--    , printAnimalWebData model.bunny
     ]
-
-printAnimalWebData : WebData (DangerousAnimal a) -> Html msg
-printAnimalWebData animal =
-    case animal of
-        NotAsked ->
-            text "There is no animal"
-
-        Loading ->
-            text "Animal is loading"
-
-        Failure err ->
-            text <| "Error loading animal: "++ toString err
-
-        Success val ->
-            text <| printWayToKill val
-
-printWayToKill : DangerousAnimal a -> String
-printWayToKill animal =
-    animal.wayToKill
