@@ -1,0 +1,31 @@
+module NotificationTypes exposing (..)
+
+import Time exposing (Time)
+
+
+type Toast a
+    = Toast (InternalToast a)
+
+
+type Notification a
+    = Notification (InternalNotification a)
+
+
+type alias InternalConfig =
+    { hideTransitionDelay : Time
+    }
+
+
+type alias InternalToast a =
+    { config : InternalConfig
+    , notifications : List (Notification a)
+    }
+
+
+type alias InternalNotification a =
+    { startTime : Time
+    , expirationTime : Time
+    , message : a
+    , startDelay : Time
+    , duration : Time
+    }
